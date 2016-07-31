@@ -1,0 +1,18 @@
+        <destinationPolicy>
+            <policyMap>
+              <policyEntries><% @config['policy'].each do | policy, value | %>
+                <policyEntry
+                <%- value.each do | v, k | -%>
+                <%= v -%>="<%= k %>"
+                <% end -%>>
+                  <pendingSubscriberPolicy>
+                    <vmCursor />
+                  </pendingSubscriberPolicy>
+                </policyEntry>
+              <%- end -%>
+              </policyEntries>
+            </policyMap>
+        </destinationPolicy>
+        
+    </broker>
+

@@ -1,0 +1,8 @@
+        <persistenceAdapter>
+        <% @config['persistence_adapter'].each do | adapter,option | -%>
+        <<%= adapter %> 
+        <% option.each_with_index do | (key, value), index| -%>
+          <%= key -%>="<%= value %>"<%= '/>' if index == (option.size - 1 ) %>
+        <% end -%>
+        <%- end -%></persistenceAdapter>
+

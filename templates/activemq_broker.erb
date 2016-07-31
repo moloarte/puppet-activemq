@@ -1,0 +1,11 @@
+      <broker xmlns="http://activemq.apache.org/schema/core" 
+        brokerName="<%= @config['broker_name'] -%>" 
+        dataDirectory="<%= @config['datadirectory'] -%>"
+        persistent="true" 
+        schedulerSupport="<%= @config['schedulersupport'] -%>"
+        networkConnectorStartAsync="<%= @config['networkconnectorstartasync'] -%>"
+        useJmx="<%= @config['useJMX'] -%>">
+        <managementContext>
+            <managementContext createConnector="false"/>
+        </managementContext>
+

@@ -1,0 +1,20 @@
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>file:${activemq.base}/conf/credentials.properties</value>
+        </property>
+        <%- if @jetty_config['webconsole']['ssl'] -%>
+        <property name="connectors">
+          <list>
+            <bean id="Connector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <property name="port" value="<%= @jetty_config['webconsole']['port']-%>" />
+            </bean>
+            <bean id="SecureConnector" class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+              <property name="port" value="<%= @jetty_config['webconsole']['ssl_port']-%>" />
+              <property name="keystore" value="file:${activemq.conf}/broker.ks" />
+              <property name="password" value="<%= @jetty_config['webconsole']['password']-%>" />
+             </bean>
+           </list>
+        </property>
+        <%- end -%>
+    </bean>
+    <import resource="${activemq.base}/conf/jetty.xml" />

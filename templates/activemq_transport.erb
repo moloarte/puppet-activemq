@@ -1,0 +1,19 @@
+        <transportConnectors>
+          <%- @config['transportconnector'].each do | name, param | -%>
+            <transportConnector 
+            name="<%= name -%>"
+            uri="<%= param['protocol'] -%>://<%= param['uri'] -%>"
+            <%- if param['options'] -%><%- param['options'].each do |option, value| -%>
+            <%= option -%>="<%= value -%>"
+          <%- end -%><%- end -%>            />
+        <%- end -%>
+        </transportConnectors>
+        <%- if @config['sslContext'] -%>
+        <sslContext>
+        <sslContext 
+          keyStore="<%= @config['sslContext']['keystore'] -%>" 
+          keyStorePassword="<%= @config['sslContext']['keystorepassword'] -%>" 
+          trustStore="<%= @config['sslContext']['truststore'] -%>" 
+          trustStorePassword="<%= @config['sslContext']['truststorepassword'] -%>"/>
+        </sslContext>
+        <% end -%>

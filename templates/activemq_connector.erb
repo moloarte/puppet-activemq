@@ -1,0 +1,18 @@
+        <!--
+          Configure network connectors for a network of brokers. 
+          In this config, all brokers are connected to each other.
+        -->
+        <networkConnectors>
+        <%- @config['networkConnectors'].each do | key, value | -%>
+            <networkConnector 
+          <%-  value['members']-=[@fqdn] -%>
+                  name="<%= key -%>"
+                  duplex="<%= value['duplex'] -%>"
+                  uri="<%= value['discovery'] -%>:(<% value['members'].each_with_index do |server, index| -%><%= value['protocol'] -%>://<%= server -%>:<%= value['port'] -%><%= ',' if index < (value['members'].size - 1) -%><%- end -%>)<%= value['options'] -%>"/>
+                    <%- if @config['networkConnectors']['discovery'] == 'dynamic' -%>
+            <dynamicallyIncludedDestinations>
+              <topic physicalName="outgoing.<%= key -%>" />
+            </dynamicallyIncludedDestinations>
+          <%- end -%>
+        <% end -%></networkConnectors>
+

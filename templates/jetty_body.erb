@@ -1,0 +1,80 @@
+    <bean id="securityLoginService" class="org.eclipse.jetty.security.HashLoginService">
+        <property name="name" value="ActiveMQRealm" />
+        <property name="config" value="${activemq.conf}/jetty-realm.properties" />
+    </bean>
+
+    <bean id="securityConstraint" class="org.eclipse.jetty.util.security.Constraint">
+        <property name="name" value="BASIC" />
+        <property name="roles" value="user,admin" />
+        <!-- set authenticate=false to disable login -->
+        <property name="authenticate" value="false" />
+    </bean>
+    <bean id="adminSecurityConstraint" class="org.eclipse.jetty.util.security.Constraint">
+        <property name="name" value="BASIC" />
+        <property name="roles" value="admin" />
+         <!-- set authenticate=false to disable login -->
+        <property name="authenticate" value="false" />
+    </bean>
+    <bean id="securityConstraintMapping" class="org.eclipse.jetty.security.ConstraintMapping">
+        <property name="constraint" ref="securityConstraint" />
+        <property name="pathSpec" value="/api/*,/admin/*,*.jsp" />
+    </bean>
+    <bean id="adminSecurityConstraintMapping" class="org.eclipse.jetty.security.ConstraintMapping">
+        <property name="constraint" ref="adminSecurityConstraint" />
+        <property name="pathSpec" value="*.action" />
+    </bean>
+    <bean id="securityHandler" class="org.eclipse.jetty.security.ConstraintSecurityHandler">
+        <property name="loginService" ref="securityLoginService" />
+        <property name="authenticator">
+            <bean class="org.eclipse.jetty.security.authentication.BasicAuthenticator" />
+        </property>
+        <property name="constraintMappings">
+            <list>
+                <ref bean="adminSecurityConstraintMapping" />
+                <ref bean="securityConstraintMapping" />
+            </list>
+        </property>
+        <property name="handler">
+            <bean id="sec" class="org.eclipse.jetty.server.handler.HandlerCollection">
+                <property name="handlers">
+                    <list>
+                        <bean class="org.eclipse.jetty.webapp.WebAppContext">
+                            <property name="contextPath" value="/admin" />
+                            <property name="resourceBase" value="${activemq.home}/webapps/admin" />
+                            <property name="logUrlOnStart" value="true" />
+                        </bean>
+                        <!-- Enable embedded file server for Blob messages -->
+                        <!--
+                        <bean class="org.eclipse.jetty.webapp.WebAppContext">
+                            <property name="contextPath" value="/fileserver" />
+                            <property name="resourceBase" value="${activemq.home}/webapps/fileserver" />
+                            <property name="logUrlOnStart" value="true" />
+                            <property name="parentLoaderPriority" value="true" />
+                        </bean>
+                        -->
+                        <bean class="org.eclipse.jetty.webapp.WebAppContext">
+                            <property name="contextPath" value="/api" />
+                            <property name="resourceBase" value="${activemq.home}/webapps/api" />
+                            <property name="logUrlOnStart" value="true" />
+                        </bean>
+                        <bean class="org.eclipse.jetty.server.handler.ResourceHandler">
+                            <property name="directoriesListed" value="false" />
+                            <property name="welcomeFiles">
+                                <list>
+                                    <value>index.html</value>
+                                </list>
+                            </property>
+                            <property name="resourceBase" value="${activemq.home}/webapps/" />
+                        </bean>
+                        <bean id="defaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler">
+                            <property name="serveIcon" value="false" />
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection">
+    </bean>
+
